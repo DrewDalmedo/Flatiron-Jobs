@@ -17,17 +17,39 @@ class JobFinderController
     Job.new(hash_of_picked_job)
     '''
     def start
-        puts "Welcome to Flatiron Jobs!"
+        puts "Welcome to #{"// Flatiron".blue} Jobs!"
         puts "========================="
         main_menu
 
     end
 
     def main_menu
-        # TODO: implement loop where the app wont exit until they decide to exit themselves
         temp_user = User.new()
-        #user_input = gets.strip.to_i
-        search_for_jobs(temp_user)
+        
+        puts "Please select one of the following options by number:"
+        exit_flag = false
+        while(exit_flag == false)
+            puts "0. Exit program"
+            puts "1. Search for jobs"
+            puts "2. List saved jobs"
+            puts "-------------------------"
+            user_input = gets.strip.to_i
+            puts "-------------------------"
+            if (user_input == 0)
+                exit_flag = true
+                puts "#{"//".blue} See ya next time!"
+            elsif (user_input == 1)
+                search_for_jobs(temp_user)
+            elsif (user_input == 2)
+                # temporary solution: write a print_jobs method later!
+                ap temp_user.saved_jobs
+            else
+                puts "Not a valid option!"
+            end
+            puts "-------------------------"
+
+        end
+        
     end
 
     def search_for_jobs(user)
@@ -37,7 +59,7 @@ class JobFinderController
         puts "Great! Now, please enter the zipcode or name of the area you'd like to search in:"
         user.location = gets.strip
         puts "-------------------------"
-        puts "Would you like to restrict your search to full time jobs? (yes/no)"
+        puts "Would you like to restrict your search to full time jobs? (#{"yes".green}/#{"no".red})"
         user.wants_fulltime = gets.strip
         if user.wants_fulltime == "yes"
             user.wants_fulltime = "on"
@@ -45,6 +67,7 @@ class JobFinderController
             user.wants_fulltime = "off"
         else
             puts "ERROR: not a valid answer!!! defaulting to no..."
+            user.wants_fulltime = "off"
         end
         puts "-------------------------"
         puts "Processing your job search..."
@@ -54,7 +77,7 @@ class JobFinderController
         puts "-------------------------"
         if !(results.size == 0)
             results.each do |result| 
-                puts "#{results.index(result)+1}. #{result[:title]} : #{result[:company]}"
+                puts "#{results.index(result)+1}. #{result[:title].greenish} : #{result[:company].blue}"
             end
         end
         puts "-------------------------"
@@ -64,7 +87,7 @@ class JobFinderController
         if (user_input < 1 || user_input > results.size)
             puts "not a valid number!"
         else
-            puts "#{results[user_input-1][:title]} : #{results[user_input-1][:company]}\n\n"
+            puts "#{results[user_input-1][:title].greenish} : #{results[user_input-1][:company].blue}\n\n"
             puts results[user_input-1][:description]
         end
         puts "-------------------------"
@@ -83,6 +106,7 @@ class JobFinderController
         end
 
         Parser.save_jobs(jobs: saved_jobs_array, user: user)
-        ap user
+        #ap user
+        puts "Saved!".green
     end
 end
