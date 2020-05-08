@@ -57,8 +57,8 @@ class Parser
             hash[:company_url] = job_posting["company_url"]
             hash[:created_at] = job_posting["created_at"]
             hash[:location] = job_posting["location"]
-            hash[:description] = job_posting["description"]
-            hash[:how_to_apply] = job_posting["how_to_apply"]
+            hash[:description] = Sanitize.fragment(job_posting["description"])
+            hash[:how_to_apply] = Sanitize.fragment(job_posting["how_to_apply"])
                 
             user.save_job( Job.new(hash) )
             
