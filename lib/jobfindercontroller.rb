@@ -19,12 +19,16 @@ class JobFinderController
     def start
         puts "Welcome to Flatiron Jobs!"
         puts "========================="
-        temp_user = User.new()
-        search_for_jobs(temp_user)
-
+        main_menu
 
     end
 
+    def main_menu
+        # TODO: implement loop where the app wont exit until they decide to exit themselves
+        temp_user = User.new()
+        #user_input = gets.strip.to_i
+        search_for_jobs(temp_user)
+    end
 
     def search_for_jobs(user)
         puts "Please enter your preferred job title, benefits, companies, or expertise:"
@@ -73,12 +77,12 @@ class JobFinderController
 
         index = 0
         while index < saving.size
-            #saved_jobs_array << results[saving[index].to_i-1]
-            user.save_job( Job.new(results[saving[index].to_i-1].githubjobs_url) )
+            saved_jobs_array << results[saving[index].to_i-1]
+            #user.save_job( Job.new(results[saving[index].to_i-1].githubjobs_url) )
             index += 1
         end
 
-        #Parser.save_entries(entries: saved_jobs_array, user: user)
-        ap user.saved_jobs
+        Parser.save_jobs(jobs: saved_jobs_array, user: user)
+        ap user
     end
 end
