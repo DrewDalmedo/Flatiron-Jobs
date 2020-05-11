@@ -20,7 +20,6 @@ class JobFinderController
         puts "Welcome to #{"// Flatiron".blue} Jobs!"
         puts "========================="
         main_menu
-
     end
 
     def main_menu
@@ -37,12 +36,12 @@ class JobFinderController
             puts "-------------------------"
             if (user_input == 0)
                 exit_flag = true
-                puts "#{"//".blue} See ya next time!"
+                puts "#{"//".blue} #{"See you next time!".green}"
             elsif (user_input == 1)
                 search_for_jobs(temp_user)
             elsif (user_input == 2)
                 # temporary solution: write a print_jobs method later!
-                ap temp_user.saved_jobs
+                temp_user.print_jobs
             else
                 puts "Not a valid option!"
             end
@@ -52,11 +51,35 @@ class JobFinderController
         
     end
 
+    def preview_jobs(results)
+        exit_flag = false
+        while !(exit_flag)
+            if !(results.size == 0)
+                results.each do |result| 
+                    puts "#{results.index(result)+1}. #{result[:title].greenish} : #{result[:company].blue}"
+                end
+            end
+            puts "-------------------------"
+            puts "Please enter the number of the job you want to know more about (0 exits preview):"
+            user_input = gets.strip.to_i
+            puts "-------------------------"
+            if (user_input < 0 || user_input > results.size)
+                puts "not a valid number!"
+            elsif (user_input == 0)
+                exit_flag = true
+            else
+                puts "#{results[user_input-1][:title].greenish} : #{results[user_input-1][:company].blue}\n\n"
+                puts results[user_input-1][:description]
+                puts "-------------------------"
+            end
+        end
+    end
+
     def search_for_jobs(user)
-        puts "Please enter your preferred job title, benefits, companies, or expertise:"
+        puts "Please enter your #{"preferred job title".blue}, #{"benefits".blue}, #{"companies".blue}, or #{"expertise".blue}:"
         user.wants_type_of_job = gets.strip
         puts "-------------------------"
-        puts "Great! Now, please enter the zipcode or name of the area you'd like to search in:"
+        puts "Great! Now, please enter the #{"zipcode".blue} or #{"name of the area".blue} you'd like to search in:"
         user.location = gets.strip
         puts "-------------------------"
         puts "Would you like to restrict your search to full time jobs? (#{"yes".green}/#{"no".red})"
@@ -73,26 +96,11 @@ class JobFinderController
         puts "Processing your job search..."
         results = Parser.get_results(description: user.wants_type_of_job, location: user.location, full_time: user.wants_fulltime)
         #ap results
-        puts "Done!"
+        puts "#{"Done!".green}"
         puts "-------------------------"
-        if !(results.size == 0)
-            results.each do |result| 
-                puts "#{results.index(result)+1}. #{result[:title].greenish} : #{result[:company].blue}"
-            end
-        end
-        puts "-------------------------"
-        puts "Please enter the number of the job you want to know more about:"
-        user_input = gets.strip.to_i
-        puts "-------------------------"
-        if (user_input < 1 || user_input > results.size)
-            puts "not a valid number!"
-        else
-            puts "#{results[user_input-1][:title].greenish} : #{results[user_input-1][:company].blue}\n\n"
-            puts results[user_input-1][:description]
-        end
-        puts "-------------------------"
-        #puts results[user_input-1][:githubjobs_url]
-        #ap Job.new(results[user_input-1])
+
+        preview_jobs(results)
+
         puts "Select which jobs to save"
         saving = gets.strip
         saving = saving.split(" ")
