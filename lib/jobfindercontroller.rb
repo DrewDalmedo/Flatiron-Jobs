@@ -40,7 +40,6 @@ class JobFinderController
             elsif (user_input == 1)
                 search_for_jobs(temp_user)
             elsif (user_input == 2)
-                # temporary solution: write a print_jobs method later!
                 temp_user.print_jobs
             else
                 puts "Not a valid option!"
@@ -56,7 +55,7 @@ class JobFinderController
         while !(exit_flag)
             if !(results.size == 0)
                 results.each do |result| 
-                    puts "#{results.index(result)+1}. #{result[:title].greenish} : #{result[:company].blue}"
+                    puts "#{results.index(result)+1}. #{result.title.greenish} : #{result.company.blue}"
                 end
             end
             puts "-------------------------"
@@ -68,8 +67,8 @@ class JobFinderController
             elsif (user_input == 0)
                 exit_flag = true
             else
-                puts "#{results[user_input-1][:title].greenish} : #{results[user_input-1][:company].blue}\n\n"
-                puts results[user_input-1][:description]
+                puts "#{results[user_input-1].title.greenish} : #{results[user_input-1].company.blue}\n\n"
+                puts results[user_input-1].description
                 puts "-------------------------"
             end
         end
@@ -95,7 +94,6 @@ class JobFinderController
         puts "-------------------------"
         puts "Processing your job search..."
         results = Parser.get_results(description: user.wants_type_of_job, location: user.location, full_time: user.wants_fulltime)
-        #ap results
         puts "#{"Done!".green}"
         puts "-------------------------"
 
@@ -109,12 +107,11 @@ class JobFinderController
         index = 0
         while index < saving.size
             saved_jobs_array << results[saving[index].to_i-1]
-            #user.save_job( Job.new(results[saving[index].to_i-1].githubjobs_url) )
             index += 1
         end
 
         Parser.save_jobs(jobs: saved_jobs_array, user: user)
-        #ap user
+        
         puts "Saved!".green
     end
 end
