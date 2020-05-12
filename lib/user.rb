@@ -9,6 +9,7 @@ class User
     end
 
     '''
+    # in a more complex program, jobs would be the ones to keep track of who has saved them (single source of truth)
     def saved_jobs()
         Job.all.select {|job| job.saved_by_users.include?(self)}
     end
@@ -30,12 +31,6 @@ class User
                 puts "-------------------------" if @saved_jobs.index(job) != @saved_jobs.size-1 
             end
         end
-
-
-        '''
-        puts "#{results[user_input-1][:title].greenish} : #{results[user_input-1][:company].blue}\n\n"
-        puts results[user_input-1][:description]
-        puts "-------------------------"
-        '''
+        
     end
 end
