@@ -25,28 +25,25 @@ class Parser
         parsed_json = JSON.parse(url.read)
 
         # grabbing the most relevant info for preview
-        array_hash = []
+        array_of_jobs = []
         parsed_json.each do |posting|
             hash = {}
             hash[:title] = posting["title"]
-            hash[:type] = posting["type"]
             hash[:company] = posting["company"]
-            #hash[:company_url] = posting["company_url"]
-            #hash[:created_at] = posting["created_at"]
-            hash[:githubjobs_url] = posting["url"]
             hash[:description] = Sanitize.fragment(posting["description"])
-            #hash[:how_to_apply] = Sanitize.fragment(posting["how_to_apply"])
-            array_hash << hash
+            hash[:githubjobs_url] = posting["url"]
+
+            array_of_jobs << Job.new(hash)
         end
         
-        array_hash
+        array_of_jobs
     end
 
     # entries should be either a hash or an array of hashes which contain the job postings the user wants to save
     def self.save_jobs(jobs:, user:)
         # we want to pull close to all the data from the :githubjobs_url link
         jobs.each do |job|
-            job_posting = JSON.parse(open("#{job[:githubjobs_url]}.json").read)
+            job_posting = JSON.parse(open("#{job.githubjobs_url}.json").read)
             
             hash = {}
 
@@ -61,8 +58,6 @@ class Parser
             hash[:how_to_apply] = Sanitize.fragment(job_posting["how_to_apply"])
                 
             user.save_job( Job.new(hash) )
-            
-            #user.saved_jobs << Job.new(entry)
         end
     end
 end
