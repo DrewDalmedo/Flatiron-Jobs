@@ -45,19 +45,29 @@ class Parser
         jobs.each do |job|
             job_posting = JSON.parse(open("#{job.githubjobs_url}.json").read)
             
+
+
+
+            '''
             hash = {}
 
+            
             hash[:title] = job_posting["title"]
             hash[:type] = job_posting["type"]
             hash[:company] = job_posting["company"]
             hash[:githubjobs_url] = job_posting["githubjobs_url"]
-            hash[:company_url] = job_posting["company_url"]
-            hash[:created_at] = job_posting["created_at"]
-            hash[:location] = job_posting["location"]
-            hash[:description] = Sanitize.fragment(job_posting["description"])
-            hash[:how_to_apply] = Sanitize.fragment(job_posting["how_to_apply"])
-                
-            user.save_job( Job.new(hash) )
+
+            '''
+
+            
+            job.company_url = job_posting["company_url"]
+            job.created_at = job_posting["created_at"]
+            job.location = job_posting["location"]
+            job.description = Sanitize.fragment(job_posting["description"])
+            job.how_to_apply = Sanitize.fragment(job_posting["how_to_apply"])
+
+            user.save_job( job )
+            
         end
     end
 end
